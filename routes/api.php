@@ -21,6 +21,8 @@ Route::get('/FetchTeacherUsernames', [LoginController::class, 'fetchTeacherUsern
 Route::post('/register', [LoginController::class, 'register']);
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout']);
-
-
-
+Route::get('/users', [LoginController::class, 'fetchAllUsers']);
+Route::put('/users/{id}', [LoginController::class, 'updateUser']);
+Route::put('/users/{id}/deactivate', [LoginController::class, 'deactivateUser']);
+Route::put('/users/{id}/deactivate', [LoginController::class, 'deactivateUser']);
+Route::put('/users/{id}/activate', [LoginController::class, 'activateUser']);

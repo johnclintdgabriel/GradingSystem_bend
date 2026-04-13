@@ -35,6 +35,66 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
             'password' => Hash::make('qweqwe')
         ]);
+        DB::table('users')->insert([
+            'username' => 'adminq',
+            'email' => 'a@qq',
+            'role' => 'teacher',
+            'password' => Hash::make('qweqwe')
+        ]);
+        DB::table('users')->insert([
+            'username' => 'adminw',
+            'email' => 'a@qw',
+            'role' => 'teacher',
+            'password' => Hash::make('qweqwe')
+        ]);
+        DB::table('users')->insert([
+            'username' => 'admine',
+            'email' => 'a@qe',
+            'role' => 'teacher',
+            'password' => Hash::make('qweqwe')
+        ]);
+        DB::table('users')->insert([
+            'username' => 'adminr',
+            'email' => 'a@qr',
+            'role' => 'teacher',
+            'password' => Hash::make('qweqwe')
+        ]);
+        DB::table('users')->insert([
+            'username' => 'admint',
+            'email' => 'a@qt',
+            'role' => 'teacher',
+            'password' => Hash::make('qweqwe')
+        ]);
+        DB::table('users')->insert([
+            'username' => 'adminy',
+            'email' => 'a@qy',
+            'role' => 'teacher',
+            'password' => Hash::make('qweqwe')
+        ]);
+        DB::table('users')->insert([
+            'username' => 'adminu',
+            'email' => 'a@qu',
+            'role' => 'teacher',
+            'password' => Hash::make('qweqwe')
+        ]);
+        DB::table('users')->insert([
+            'username' => 'admini',
+            'email' => 'a@qi',
+            'role' => 'teacher',
+            'password' => Hash::make('qweqwe')
+        ]);
+        DB::table('users')->insert([
+            'username' => 'admino',
+            'email' => 'a@qo',
+            'role' => 'teacher',
+            'password' => Hash::make('qweqwe')
+        ]);
+        DB::table('users')->insert([
+            'username' => 'adminp',
+            'email' => 'a@qp',
+            'role' => 'teacher',
+            'password' => Hash::make('qweqwe')
+        ]);
     }
 }
 
