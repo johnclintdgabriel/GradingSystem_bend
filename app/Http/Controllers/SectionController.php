@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Section;
+use App\Models\Student;
 
 class SectionController extends Controller
 {
@@ -39,6 +40,47 @@ class SectionController extends Controller
 
         return response()->json($section);
     }
+
+    public function bulkImportStudents(Request $request)
+    {
+        $request->validate([
+            'section_id' => 'required|exists:sections,id',
+            'students' => 'required|array'
+        ]);
+
+        $imported = [];
+        $skipped = [];
+
+        foreach ($request->students as $student) {
+
+            $name = trim($student['name']);
+
+            // check if student already exists in ANY section
+            $exists = Student::whereRaw('LOWER(name) = ?', [strtolower($name)])->exists();
+
+            if ($exists) {
+                $skipped[] = $name;
+                continue;
+            }
+
+            Student::create([
+                'name' => $name,
+                'gender' => $student['gender'] ?? null,
+                'section_id' => $request->section_id
+            ]);
+
+            $imported[] = $name;
+        }
+
+        return response()->json([
+            'message' => 'Import completed',
+            'imported_count' => count($imported),
+            'skipped_count' => count($skipped),
+            'skipped_students' => $skipped
+        ]);
+    }
+
+
 
     // UPDATE section
     public function update(Request $request, $id)

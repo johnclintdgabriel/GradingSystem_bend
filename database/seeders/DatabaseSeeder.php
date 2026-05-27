@@ -95,6 +95,32 @@ class DatabaseSeeder extends Seeder
             'role' => 'teacher',
             'password' => Hash::make('qweqwe')
         ]);
+
+        
+        DB::table('subjects')->insert([
+            'name' => 'ENGLISH',
+        ]);
+        DB::table('subjects')->insert([
+            'name' => 'MATHEMATICS',
+        ]);
+        DB::table('subjects')->insert([
+            'name' => 'SCIENCE',
+        ]);
+        DB::table('subjects')->insert([
+            'name' => 'ARALING PANLIPUNAN',
+        ]);
+        DB::table('subjects')->insert([
+            'name' => 'FILIPINO',
+        ]);
+        DB::table('subjects')->insert([
+            'name' => 'ESP',
+        ]);
+        DB::table('subjects')->insert([
+            'name' => 'TLE',
+        ]);
+        DB::table('subjects')->insert([
+            'name' => 'MAPEH',
+        ]);
     }
 }
 

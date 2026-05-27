@@ -11,21 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('students', function (Blueprint $table) {
+        Schema::create('subjects', function (Blueprint $table) {
             $table->id();
-            $table->string('student_number')->unique();
+
+            // 📘 Subject Name only (based on your new design)
             $table->string('name');
-            $table->foreignId('section_id')->constrained()->cascadeOnDelete();
+
             $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('students');
+        Schema::dropIfExists('subjects');
     }
 };

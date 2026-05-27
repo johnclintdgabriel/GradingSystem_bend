@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
+
 class LoginController extends Controller
 {
     // ---------------------------
@@ -17,12 +18,19 @@ class LoginController extends Controller
     {
         $teachers = User::where('role', 'teacher')
             ->where('status', 'active')
+            ->whereNotIn('id', function ($query) {
+                $query->select('adviser_id') // make sure this matches your column
+                    ->from('sections')
+                    ->whereNotNull('adviser_id');
+            })
             ->select('id', 'username as name')
-            ->orderBy('id', 'desc')
-            ->get(); // keep this simple (no need pagination here)
+            ->orderBy('username', 'asc') // ✅ alphabetical order
+            ->get();
 
         return response()->json($teachers);
     }
+
+
 
 
     // ---------------------------
@@ -57,16 +65,30 @@ class LoginController extends Controller
         }
 
         // -------------------------
-        // FETCH DATA
+        // 🔥 SORT FIX (THIS IS WHAT YOU WERE MISSING)
+        // -------------------------
+        $allowedFields = ['username', 'email', 'id'];
+        $allowedDirections = ['asc', 'desc'];
+
+        $sortField = in_array($request->sort_field, $allowedFields)
+            ? $request->sort_field
+            : 'id';
+
+        $sortDirection = in_array($request->sort_direction, $allowedDirections)
+            ? $request->sort_direction
+            : 'desc';
+
+        $query->orderBy($sortField, $sortDirection);
+
+        // -------------------------
+        // PAGINATION
         // -------------------------
         $users = $query
             ->select('id', 'username', 'email', 'role', 'status')
-            ->orderBy('id', 'desc')
             ->paginate(10);
 
         return response()->json($users);
     }
-
 
 
     // ---------------------------
@@ -98,29 +120,43 @@ class LoginController extends Controller
     // ---------------------------
     // API Login
     // ---------------------------
+
     public function login(Request $request)
-    {
-        $user = User::where('email', $request->email)
-            ->where('status', 'active') // ✅ updated
-            ->first();
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required'
+    ]);
 
-        if (!$user) {
-            return response()->json([
-                'message' => 'User not found or deactivated'
-            ], 404);
-        }
+    $user = User::where('email', $request->email)
+        ->where('status', 'active')
+        ->first();
 
-        if (!Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'message' => 'Invalid password'
-            ], 401);
-        }
-
+    if (!$user) {
         return response()->json([
-            'message' => 'Login successful',
-            'user' => $user
-        ]);
+            'message' => 'User not found'
+        ], 404);
     }
+
+    if (!Hash::check($request->password, $user->password)) {
+        return response()->json([
+            'message' => 'Invalid password'
+        ], 401);
+    }
+
+    // Create Sanctum token
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'token' => $token,
+        'user' => [
+            'id' => $user->id,
+            'username' => $user->username,
+            'email' => $user->email,
+            'role' => $user->role
+        ]
+    ]);
+}
 
     // ---------------------------
     // Update User
